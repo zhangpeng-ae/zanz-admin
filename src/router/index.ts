@@ -91,15 +91,23 @@ router.beforeEach(async (to, from, next) => {
     return
   }
 
-  const userStore = useUserStore()
   const asyncRouteStore = useAsyncRouteStore()
+  if (asyncRouteStore.getIsDynamicRouteAdded) {
+    next()
+    return
+  }
+
+  const userStore = useUserStore()
+
   const userInfo = await userStore.getInfo()
   const routes = asyncRouteStore.generateRoutes(userInfo)
-  console.log(
-    '%c [ routes ]-98',
-    'font-size:13px; background:pink; color:#bf2c9f;',
-    routes,
-  )
+
+  // 动态添加可访问路由表
+  routes.forEach((item) => {
+    router.addRoute(item as unknown as RouteRecordRaw)
+  })
+
+  asyncRouteStore.setDynamicRouteAdded(true)
 
   next()
 })

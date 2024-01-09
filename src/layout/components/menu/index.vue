@@ -20,6 +20,7 @@
 </template>
 <script setup lang="ts">
 import { withDefaults } from 'vue'
+import { useAsyncRouteStore } from '@/store/modules/asyncRoute'
 defineOptions({
   name: 'PageMenu',
 })
@@ -31,6 +32,10 @@ interface Props {
 withDefaults(defineProps<Props>(), {
   collapsed: false,
 })
+
+const store = useAsyncRouteStore()
+
+console.log(store.getMenus)
 </script>
 
 <style lang="scss">
